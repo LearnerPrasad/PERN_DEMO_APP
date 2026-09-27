@@ -5,21 +5,48 @@ import cors from 'cors';
 
 const app = express();
 
-app.use(cors({origin: 'http://localhost:5173'}));
+app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(express.json());
 dotenv.config();
 
 app.get("/test", (_req, res) => {
   res.send("Backend is running");
 });
 
-app.get('/db-test', async (req,res)=>{
-    try{
-        const result = await pool.query('SELECT * FROM users');
-        res.json(result.rows);
-    }catch(err){
-        console.error('Error executing query', err);
-        res.status(500).send('Internal Server Error');
-    }
+app.get('/db-test', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM users');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error executing query', err);
+    res.status(500).send('Internal Server Error');
+  }
+})
+
+app.post('/postUserData', async (req, res) => {
+  const { name, email, city } = req.body ?? {};
+
+  if (
+    typeof name !== 'string' || !name.trim() ||
+    typeof email !== 'string' || !email.trim() ||
+    typeof city !== 'string' || !city.trim()
+  ) {
+    return res.status(400).json({ error: 'Name, email, and city are required' });
+  }
+
+  const normalisedEmail = email.trim();
+  console.log("normalisedEmail", normalisedEmail)
+  const userAlreadyExists = await pool.query('SELECt email FROM users WHERE email = $1', [normalisedEmail]);
+  if (userAlreadyExists.rows.length > 0) {
+    return res.status(400).json({ error: 'Email already exists' })
+  }
+
+  try {
+    const result = await pool.query('INSERT INTO users(name, email, city) VALUES ($1, $2, $3) RETURNING *', [name, email, city]);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create user' });
+  }
 })
 app.listen(3000, () => {
   console.log("Backend listening at http://localhost:3000/test");
