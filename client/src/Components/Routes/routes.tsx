@@ -9,9 +9,10 @@ type UserTypes = {
 
 type RoutesProps = {
     createdUsers: UserTypes[];
+    onEditUser: (user: UserTypes) => void;
 }
 
-export default function Routes({ createdUsers }: RoutesProps) {
+export default function Routes({ createdUsers ,onEditUser}: RoutesProps) {
     const [result, setResult] = useState<UserTypes[]>([]);
 
     useEffect(() => {
@@ -27,6 +28,10 @@ export default function Routes({ createdUsers }: RoutesProps) {
     }, []);
 
     const users = [...result, ...createdUsers];
+
+    const handleEdit = (user: UserTypes) => {
+        onEditUser(user);
+    }
 
     return (
         <div>
@@ -48,6 +53,7 @@ export default function Routes({ createdUsers }: RoutesProps) {
                                     <td>{user.name}</td>
                                     <td>{user.email}</td>
                                     <td>{user.city}</td>
+                                    <td><button onClick={() => handleEdit(user)}>Edit</button></td>
                                 </tr>
                             )
                         })

@@ -10,15 +10,17 @@ type CreatedUser = formValues & { id: number };
 
 type UserFormProps = {
     onUserCreated: (user: CreatedUser) => void;
+    onUserUpdated: (user: CreatedUser) => void;
+    editUser: CreatedUser | null;
 }
 
-export default function UserForm({ onUserCreated }: UserFormProps) {
+export default function UserForm({ onUserCreated, editUser, onUserUpdated }: UserFormProps) {
 
     const [formValues, setFormValues] = useState<formValues>({
-        name: "",
-        email: "",
-        city: ""
-    })
+        name: editUser?.name ?? "",
+        email: editUser?.email ?? "",
+        city: editUser?.city ?? ""
+    });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -31,11 +33,15 @@ export default function UserForm({ onUserCreated }: UserFormProps) {
     const hasEmptyFields = Object.values(formValues).some(value => !value.trim());
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
         e.preventDefault();
-        fetch('http://localhost:3000/postUserData', {
-            method: 'POST',
+        const url = editUser ? 'http://localhost:3000/putUserData' : 'http://localhost:3000/postUserData';
+        const method = editUser ? 'PUT' : 'POST';
+        const dataToSend = editUser ? { ...formValues, id: editUser.id } : formValues;
+        fetch(url, {
+            method: method,
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(formValues)
+            body: JSON.stringify(dataToSend)
         })
             .then(response => {
                 if (!response.ok) {
@@ -43,9 +49,28 @@ export default function UserForm({ onUserCreated }: UserFormProps) {
                 }
                 return response.json()
             })
-            .then((user: CreatedUser) => onUserCreated(user))
+            .then((savedUser: CreatedUser) => {
+                if (editUser) onUserUpdated(savedUser);
+                else onUserCreated(savedUser);
+
+                setFormValues({ name: '', email: '', city: '' });
+            }
+            )
             .catch(error => console.log("failed while posting data", error))
     }
+
+    // useEffect(() => {
+    //     setFormValues(editUser ? {
+    //         name: editUser.name,
+    //         email:editUser.email,
+    //         city: editUser.city
+    //     } : {
+    //         name: "",
+    //         email: "",
+    //         city: ""
+    //     })
+
+    // }, [editUser])
     return (
         <form onSubmit={handleSubmit}>
             <div>

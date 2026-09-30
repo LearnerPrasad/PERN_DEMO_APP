@@ -35,7 +35,6 @@ app.post('/postUserData', async (req, res) => {
   }
 
   const normalisedEmail = email.trim();
-  console.log("normalisedEmail", normalisedEmail)
   const userAlreadyExists = await pool.query('SELECt email FROM users WHERE email = $1', [normalisedEmail]);
   if (userAlreadyExists.rows.length > 0) {
     return res.status(400).json({ error: 'Email already exists' })
@@ -48,6 +47,44 @@ app.post('/postUserData', async (req, res) => {
     res.status(500).json({ error: 'Failed to create user' });
   }
 })
+
+app.put('/putUserData', async (req, res) => {
+  //same validation as postUserData
+  //empty check for name, email, city
+  const { id, name, email, city } = req.body ?? {};
+
+  if (
+    typeof name !== 'string' || !name.trim() ||
+    typeof email !== 'string' || !email.trim() ||
+    typeof city !== 'string' || !city.trim()
+  ) {
+    return res.status(400).json({ error: 'Name, email, and city are required' });
+  }
+  //i should also check duplicates email
+  const normalisedEmail = email.trim();
+  const result = await pool.query('SELECT email FROM users WHERE email = $1', [normalisedEmail]);
+  if (result.rows.length > 0) {
+    return res.status(400).json({ error: 'Email already exists' })
+  }
+  //now if i insert ,it will insert at end of table, but i want to update the existing record with the new data 
+  //iam also getting id this time
+  //'UPDATE users SET name = $1, email = $2, city = $3
+  //WHERE id =$4] RETURNING *,[name,email,city,id] 
+
+  const updatedUser = await pool.query(
+    `UPDATE users
+   SET name = $1, email = $2, city = $3
+   WHERE id = $4
+   RETURNING *`,
+    [name, email, city, id]
+  );
+
+  if (updatedUser.rowCount === 0) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  return res.json(updatedUser.rows[0]);
+})
+
 app.listen(3000, () => {
   console.log("Backend listening at http://localhost:3000/test");
 });
