@@ -1,6 +1,6 @@
 import './App.css'
-import { useState } from 'react';
-import Routes from './Components/Routes/routes';
+import { useState, useEffect } from 'react';
+import UserList from './Components/UserList';
 import UserForm from './Components/UserForm';
 
 type User = {
@@ -11,26 +11,67 @@ type User = {
 }
 
 function App() {
-  const [createdUsers, setCreatedUsers] = useState<User[]>([]);
+  const [userData, setUserData] = useState<User[]>([])
   const [editUser, setEditUser] = useState<User | null>(null);
+  const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleUserCreated = (user: User) => {
-    setCreatedUsers(currentUsers => [...currentUsers, user]);
+    //just append to userData on creation
+    setUserData((prevUserData) => [...prevUserData, user])
   };
 
   const handleEditUser = (editUser: User) => {
     setEditUser(editUser);
   }
   const handleUserUpdated = (user: User) => {
-    setCreatedUsers(currentUser =>
-      currentUser.map(item => {
-        if (user.id === item.id) {
+    //i want to update updated user in userData
+    setUserData((prev) => {
+      return prev.map(item => {
+        if (item.id === user.id) {
           return user
         }
         return item;
-      }));
-      setEditUser(null);
+      })
+    })
+    setEditUser(null)
   }
+
+  const handleDeleteUser = (user: User) => {
+    setUserData((prevUser) => {
+      return prevUser.filter(item => {
+        if (item.id !== user.id) {
+          return item;
+        }
+      })
+    })
+  }
+
+  const handleError = (message: string) => {
+    setError(message)
+  }
+
+  const handleLoadingChange = (loading: boolean) => {
+    setIsLoading(loading);
+  }
+
+  //Read data and populate to child as needed
+
+  useEffect(() => {
+    fetch('http://localhost:3000/getUserData')
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(message => {
+            throw new Error(message || `Failed to load users (${response.status})`);
+          });
+        }
+        return response.json();
+      })
+      .then(data => setUserData(data))
+      .catch(error => setError(error instanceof Error ? error.message : 'Failed to load users'))
+      .finally(() => setIsLoading(false))
+
+  }, [])
 
   return (
     <>
@@ -40,8 +81,23 @@ function App() {
         onUserCreated={handleUserCreated}
         onUserUpdated={handleUserUpdated}
         editUser={editUser}
+        onError={handleError}
+        isLoading={isLoading}
+        onLoadingChange={handleLoadingChange}
       />
-      <Routes createdUsers={createdUsers} onEditUser={handleEditUser} />
+      {isLoading ? (
+        <p role="status">Loading...</p>
+      ) : (
+        <UserList
+          onEditUser={handleEditUser}
+          onDeleteUser={handleDeleteUser}
+          result={userData}
+          error={error}
+          onError={handleError}
+          isLoading={isLoading}
+          onLoadingChange={handleLoadingChange}
+        />
+      )}
     </>
   )
 }

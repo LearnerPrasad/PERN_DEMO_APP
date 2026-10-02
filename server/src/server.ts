@@ -56,6 +56,11 @@ app.put('/putUserData', async (req, res) => {
   //empty check for name, email, city
   const { id, name, email, city } = req.body ?? {};
 
+  if (!Number.isSafeInteger(id) || Number(id) <= 0) {
+    return res.status(400).json({ error: 'user does not exists' })
+  }
+
+
   if (
     typeof name !== 'string' || !name.trim() ||
     typeof email !== 'string' || !email.trim() ||
@@ -65,7 +70,7 @@ app.put('/putUserData', async (req, res) => {
   }
   //i should also check duplicates email
   const normalisedEmail = email.trim();
-  const result = await pool.query('SELECT email FROM users WHERE email = $1', [normalisedEmail]);
+  const result = await pool.query('SELECT id FROM users WHERE email = $1 AND id <> $2 ', [normalisedEmail, id]);
   if (result.rows.length > 0) {
     return res.status(400).json({ error: 'Email already exists' })
   }
