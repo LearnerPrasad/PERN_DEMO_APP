@@ -39,7 +39,7 @@ export default function UserForm({ onUserCreated, editUser, onUserUpdated, onErr
 
         e.preventDefault();
         onError('');
-        onLoadingChange(true);
+        // onLoadingChange(true);
         const url = editUser ? 'http://localhost:3000/putUserData' : 'http://localhost:3000/postUserData';
         const method = editUser ? 'PUT' : 'POST';
         const dataToSend = editUser ? { ...formValues, id: editUser.id } : formValues;
@@ -63,7 +63,7 @@ export default function UserForm({ onUserCreated, editUser, onUserUpdated, onErr
             }
             )
             .catch(error => onError(error instanceof Error ? error.message : 'Request failed'))
-            .finally(() => onLoadingChange(false));
+        // .finally(() => onLoadingChange(false));
     }
 
     return (

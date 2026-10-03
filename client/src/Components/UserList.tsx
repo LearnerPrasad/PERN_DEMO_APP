@@ -22,7 +22,7 @@ export default function UserList({ onEditUser, onDeleteUser, result, error, onEr
 
     const handleDeleteUser = (user: UserTypes) => {
         onError('')
-        onLoadingChange(true);
+        // onLoadingChange(true);
         fetch(`http://localhost:3000/deleteUserData/${user.id}`, {
             method: 'DELETE'
         })
@@ -35,7 +35,7 @@ export default function UserList({ onEditUser, onDeleteUser, result, error, onEr
                 onDeleteUser(user)
             })
             .catch(error => onError(error instanceof Error ? error.message : 'Failed to delete user'))
-            .finally(() => onLoadingChange(false));
+            //.finally(() => onLoadingChange(false));
     }
 
     return (
