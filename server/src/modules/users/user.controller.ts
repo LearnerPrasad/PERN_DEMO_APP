@@ -11,9 +11,8 @@ import { ValidateUserFields, ValidateUserId } from './user.validation';
 export const getUsers: RequestHandler = async (req, res) => {
     try {
         const result = await getAllUsers();
-        res.json(result);
+        res.status(200).json(result);
     } catch (err) {
-        console.error('Error executing query', err);
         res.status(500).send('Internal Server Error');
     }
 };
@@ -36,7 +35,6 @@ export const createUser: RequestHandler = async (req, res) => {
 
         return res.status(201).json(result.user);
     } catch (err) {
-        console.error('Error creating user', err);
         return res.status(500).json({ error: 'Failed to create user' });
     }
 
@@ -74,7 +72,6 @@ export const editUser: RequestHandler = async (req, res) => {
         }
         return res.json(updatedUser);
     } catch (err) {
-        console.error('Error updating user', err);
         return res.status(500).json({ error: 'Failed to update user' });
     }
 }

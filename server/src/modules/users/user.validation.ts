@@ -15,7 +15,7 @@ export function ValidateUserFields({ name, email, city }: FieldTypes) {
 }
 
 export function ValidateUserId(id: number) {
-    if (Number.isSafeInteger(id) || id > 0) {
+    if (Number.isSafeInteger(id) && id > 0) {
         return true;
     }
     return false;
