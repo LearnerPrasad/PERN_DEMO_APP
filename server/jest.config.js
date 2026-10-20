@@ -3,4 +3,6 @@ export default {
   transform: {
     "^.+\\.tsx?$": ["@swc/jest"],
   },
+  setupFiles: ["<rootDir>/jest.setup.ts"],
+
 };
