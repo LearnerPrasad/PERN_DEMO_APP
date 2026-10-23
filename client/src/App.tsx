@@ -2,6 +2,7 @@ import './App.css'
 import { useState, useEffect } from 'react';
 import UserList from './Components/UserList';
 import UserForm from './Components/UserForm';
+import UserManagement from './Components/auth/UserManagement';
 
 type User = {
   id: number;
@@ -62,19 +63,20 @@ function App() {
       .then(response => {
         if (!response.ok) {
           return response.text().then(message => {
-            throw new Error(message || `Failed to load users (${response.status})`);
+            throw new Error(message || `Failed to load contacts (${response.status})`);
           });
         }
         return response.json();
       })
       .then(data => setUserData(data))
-      .catch(error => setError(error instanceof Error ? error.message : 'Failed to load users'))
+      .catch(error => setError(error instanceof Error ? error.message : 'Failed to load contacts'))
       .finally(() => setIsLoading(false))
 
   }, [])
 
   return (
     <>
+      <UserManagement />
       <h1>Test</h1>
       <UserForm
         key={editUser ? editUser.id : 'new-user'}

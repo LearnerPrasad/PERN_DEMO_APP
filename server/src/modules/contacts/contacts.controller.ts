@@ -5,8 +5,8 @@ import {
     getAllUsers,
     updateUserById,
     userEmailExistsForAnotherUser,
-} from './user.service';
-import { ValidateUserFields, ValidateUserId } from './user.validation';
+} from './contacts.service';
+import { ValidateUserFields, ValidateUserId } from './contacts.validation';
 
 export const getUsers: RequestHandler = async (req, res) => {
     try {

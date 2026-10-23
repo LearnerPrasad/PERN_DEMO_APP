@@ -9,14 +9,14 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await pool.query('TRUNCATE TABLE users RESTART IDENTITY CASCADE');
+  await pool.query('TRUNCATE TABLE contacts RESTART IDENTITY CASCADE');
 });
 
-describe("validate get users flow", () => {
+describe("validate get contacts flow", () => {
 
-  it('should return users successfully', async () => {
+  it('should return contacts successfully', async () => {
     await pool.query(
-      `INSERT INTO users (name, email, city)
+      `INSERT INTO contacts (name, email, city)
      VALUES ($1, $2, $3)`,
       ["test", "test@gmail.com", "test"]
     );
@@ -57,7 +57,7 @@ describe("validate create userflow", () => {
   test("should validate Failed to create user", async () => {
 
     await pool.query(
-      `INSERT INTO users (name, email, city)
+      `INSERT INTO contacts (name, email, city)
      VALUES ($1, $2, $3)`,
       ["test", "test@gmail.com", "test"]
     );
@@ -75,7 +75,7 @@ describe("validate create userflow", () => {
   })
   test("should validate user craeted with 500", async () => {
     await pool.query(
-      `INSERT INTO USERS(name,email,city)
+      `INSERT INTO contacts(name,email,city)
       VALUES($1,$2,$3)`,
       ["test", "test@gmail.com", "test"]
     )
@@ -96,7 +96,7 @@ describe("validate create userflow", () => {
   })
   test("should validate user created with 201", async () => {
     // await pool.query(
-    //   `INSERT INTO USERS(name,email,city)
+    //   `INSERT INTO contacts(name,email,city)
     //   VALUES($1,$2,$3)`
     //   , ["test", "test@gmail.com", "test"]
     // )
@@ -147,14 +147,14 @@ describe("validate edit user", () => {
 
   test("should validate user exists  400", async () => {
     await pool.query(
-      `INSERT INTO users (name, email, city)
+      `INSERT INTO contacts (name, email, city)
      VALUES ($1, $2, $3)
       RETURNING id`,
       ["test", "test@gmail.com", "test"]
     );
 
     const result1 = await pool.query(
-      `INSERT INTO users (name, email, city)
+      `INSERT INTO contacts (name, email, city)
      VALUES ($1, $2, $3)
       RETURNING id`,
       ["test", "test1@gmail.com", "test"]
@@ -175,7 +175,7 @@ describe("validate edit user", () => {
 
   test("should validate user not found 404 ", async () => {
     const res = await pool.query(
-      `INSERT INTO users (name, email, city)
+      `INSERT INTO contacts (name, email, city)
      VALUES ($1, $2, $3)
        RETURNING id`,
       ["test", "test@gmail.com", "test"]
@@ -196,7 +196,7 @@ describe("validate edit user", () => {
 
   test("should validate user updated with 500", async () => {
     await pool.query(
-      `INSERT INTO USERS(name,email,city)
+      `INSERT INTO contacts(name,email,city)
       VALUES($1,$2,$3)
       RETURNING id`,
       ["test", "test@gmail.com", "test"]
@@ -218,7 +218,7 @@ describe("validate edit user", () => {
 
   })
   test("validate updated 200", async () => {
-    const res = await pool.query(`INSERT INTO USERS(name,email,city)
+    const res = await pool.query(`INSERT INTO contacts(name,email,city)
       VALUES($1,$2,$3)
       RETURNING id`,
       ["test", "test@gmail.com", "test"]
@@ -260,7 +260,7 @@ describe('validate delete user', () => {
   })
   it("validate db error? 500", async () => {
     const res = await pool.query(`
-      INSERT INTO USERS(name,email,city)
+      INSERT INTO contacts(name,email,city)
       VALUES ($1,$2,$3)
       RETURNING id`,
       ["test", "test@gmail.com", "test"]
@@ -280,7 +280,7 @@ describe('validate delete user', () => {
   })
   it("validate user deleted successfully ? 200", async () => {
     const res = await pool.query(`
-      INSERT INTO USERS(name,email,city)
+      INSERT INTO contacts(name,email,city)
       VALUES ($1,$2,$3)
       RETURNING id`,
       ["test", "test@gmail.com", "test"]

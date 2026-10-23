@@ -4,8 +4,8 @@ import {
     userEmailExistsForAnotherUser,
     updateUserById,
     deleteUserById
-} from '../../../src/modules/users/user.service';
-import { ValidateUserFields, ValidateUserId } from '../../../src/modules/users/user.validation'
+} from '../../../src/modules/contacts/contacts.service';
+import { ValidateUserFields, ValidateUserId } from '../../../src/modules/contacts/contacts.validation'
 import pool from '../../../src/config/db';
 
 jest.mock('../../../src/config/db', () => ({
@@ -16,7 +16,7 @@ jest.mock('../../../src/config/db', () => ({
 }));
 
 describe('getAllUsers', () => {
-    it('should return all users', async () => {
+    it('should return all contacts', async () => {
 
         const mockedQuery = pool.query as jest.Mock;
 

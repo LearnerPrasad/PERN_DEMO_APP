@@ -50,9 +50,9 @@ The frontend and backend are separate programs. The frontend connects by making 
 
 ```ts
 const response = await fetch('http://localhost:3000/db-test');
-const users = await response.json();
+const contacts = await response.json();
 ```
 
 The backend route queries PostgreSQL and sends the result back as JSON. The Vite starter page does not make this request yet. Since the frontend and backend use different local ports, configure backend CORS or a Vite development proxy before calling the API from the browser.
 
-`/db-test` currently runs `SELECT * FROM users`; the configured database must already have a `users` table. The route has no authentication and returns all user rows, so use it only for local development, not with real user data or in a public deployment. This project does not yet include database schema or migration files.
+`/db-test` currently runs `SELECT * FROM contacts`; the configured database must already have a `contacts` table. The route has no authentication and returns all user rows, so use it only for local development, not with real user data or in a public deployment. This project does not yet include database schema or migration files.

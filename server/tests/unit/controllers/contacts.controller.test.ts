@@ -1,9 +1,9 @@
 import type { Request, Response } from 'express';
 
-import { getAllUsers, userEmailExistsForAnotherUser, updateUserById, createUserWithEmailCheck, deleteUserById } from '../../../src/modules/users/user.service';
-import { getUsers, createUser, editUser, deleteUser } from '../../../src/modules/users/user.controller';
+import { getAllUsers, userEmailExistsForAnotherUser, updateUserById, createUserWithEmailCheck, deleteUserById } from '../../../src/modules/contacts/contacts.service';
+import { getUsers, createUser, editUser, deleteUser } from '../../../src/modules/contacts/contacts.controller';
 
-jest.mock('../../../src/modules/users/user.service')
+jest.mock('../../../src/modules/contacts/contacts.service')
 describe("should validate getUsers", () => {
     it("should build error response , if db didnot returned", async () => {
         const mockedGetAllUsers = getAllUsers as jest.Mock;
