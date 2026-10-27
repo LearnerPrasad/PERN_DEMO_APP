@@ -4,12 +4,17 @@ type LoginFormData = {
     email: string,
     password: string
 }
-export default function LoginForm() {
+type Props = {
+    login: (data: boolean) => void
+}
+export default function LoginForm({ login }: Props) {
 
     const [formData, setFormData] = useState<LoginFormData>({
         email: '',
         password: ''
-    })
+    });
+    const [error, setError] = useState('');
+
 
     const handleFormData = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = e.target
@@ -18,9 +23,43 @@ export default function LoginForm() {
             [name]: value
         }))
     }
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>):void => {
-        e.preventDefault()
-    }
+    
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    setError('');
+
+    fetch('http://localhost:3000/prasad/login', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+        .then(async response => {
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || data.error || 'Login failed'
+                );
+            }
+
+            return data;
+        })
+        .then(data => {
+            const { token } = data;
+
+            localStorage.setItem('athzToken', token);
+            login(true);
+        })
+        .catch(error => {
+            setError(
+                error instanceof Error ? error.message : 'Login failed'
+            );
+        })
+        .finally(() => {
+            setFormData({ email: '', password: '' });
+        });
+};
+
     return (
         <form onSubmit={handleSubmit}>
             <div>
@@ -47,6 +86,7 @@ export default function LoginForm() {
                 />
             </div>
             <button type='submit'>Login</button>
+            {error && <p className="error-message">{error}</p>}
         </form>
     )
 }

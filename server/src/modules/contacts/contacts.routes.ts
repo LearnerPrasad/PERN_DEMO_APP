@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { getUsers, createUser, editUser, deleteUser } from './contacts.controller'
+import { getUsers, createUser, editUser, deleteUser } from './contacts.controller';
+import authMiddleware from '.././auth/auth.middleware';
 
 const router = Router();
 
@@ -8,7 +9,7 @@ router.get("/test", (req, res) => {
 });
 
 //Read
-router.get('/getUserData', getUsers);
+router.get('/getUserData',authMiddleware, getUsers);
 
 //Create
 router.post('/postUserData', createUser)

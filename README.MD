@@ -49,7 +49,7 @@ Vite prints the frontend URL. The Express backend listens on port `3000`.
 The frontend and backend are separate programs. The frontend connects by making HTTP requests to backend API routes. For example, frontend code can request the current `GET /db-test` route like this:
 
 ```ts
-const response = await fetch('http://localhost:3000/db-test');
+const response = await fetch('http://localhost:3000/prasad/db-test');
 const contacts = await response.json();
 ```
 

@@ -2,7 +2,10 @@ import { useState } from 'react';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 
-export default function UserManagement() {
+type Props = {
+    login : (data:boolean)=>void
+}
+export default function UserManagement({login}:Props) {
 
     const [activeTab, setActiveTab] = useState<string>('login');
 
@@ -16,7 +19,7 @@ export default function UserManagement() {
                         <button onClick={() => { setActiveTab('signup') }}>Sign Up</button>
                     </div>
                     <div >
-                        {activeTab == 'login' ? <LoginForm /> : <SignupForm />}
+                        {activeTab == 'login' ? <LoginForm login ={login} /> : <SignupForm onSwitchTab={setActiveTab} />}
                     </div>
                 </div>
             </div>

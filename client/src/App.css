@@ -1,82 +1,495 @@
+
+/* =========================
+   Global and app layout
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 24px;
+  min-height: 100vh;
+  padding: 24px;
+  background: #f4f7fb;
+}
+
+.nav-container {
+  width: 100%;
+}
+
+/* =========================
+   Authentication
+========================= */
+
 .auth-container {
-    max-width: 400px;
-    margin: 40px auto;
-    width:100%;
-    padding: 24px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    box-sizing: border-box;
-    background-color: #fff;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  max-width: 400px;
+  width: 100%;
+  margin: 40px auto;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
 .auth-container h3 {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 24px;
-    font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 24px;
 }
 
 .auth-forms {
-    width: 100%;
+  width: 100%;
 }
 
 .auth-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .auth-buttons button {
-    padding: 10px 20px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #f5f5f5;
-    color: #333;
-    font-size: 15px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f5f5f5;
+  color: #333;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .auth-buttons button:hover {
-    background-color: #e5e7eb;
+  background: #e5e7eb;
 }
 
 .auth-buttons button.active {
-    background-color: #2563eb;
-    color: #fff;
-    border-color: #2563eb;
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
 }
 
 .auth-forms input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 12px;
-    margin-top: 5px;
-    margin-bottom: 14px;
-
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 15px;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
 }
 
 .auth-forms input:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .auth-forms form button[type="submit"] {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    background-color: #2563eb;
-    color: #fff;
-    font-size: 15px;
-    cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 .auth-forms form button[type="submit"]:hover {
-    background-color: #1d4ed8;
+  background: #1d4ed8;
+}
+
+/* =========================
+   Navbar
+========================= */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 24px;
+  background: #fff;
+  border: 1px solid #e8edf4;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(25, 50, 77, 0.06);
+}
+
+.app-title {
+  margin: 0;
+  color: #19324d;
+  font-size: 22px;
+}
+
+.profile-area {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 6px 12px;
+  border: 1px solid #dce5ef;
+  border-radius: 8px;
+  background: #fff;
+  color: #19324d;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #0875e1;
+  color: #fff;
+  font-weight: 600;
+}
+
+.profile-label {
+  white-space: nowrap;
+}
+
+.profile-chevron {
+  font-size: 16px;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 100;
+  min-width: 160px;
+  padding: 6px;
+  border: 1px solid #dce5ef;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(25, 50, 77, 0.12);
+}
+
+.profile-menu-item {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #344b63;
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-menu-item:hover {
+  background: #f1f6fc;
+}
+
+.logout-menu-item {
+  color: #c62828;
+}
+
+/* =========================
+   Contact form panel
+========================= */
+
+.form-panel,
+.table-panel {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  padding: 24px;
+  border: 1px solid #e8edf4;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(25, 50, 77, 0.05);
+}
+
+.form-panel {
+  overflow-x: auto;
+}
+
+.form-panel h2,
+.table-panel h2 {
+  margin: 0 0 20px;
+  color: #19324d;
+  font-size: 20px;
+}
+
+/* Keep fields and buttons in one row on desktop */
+.contact-form {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  gap: 14px;
+  width: 100%;
+  min-width: 750px;
+}
+
+.form-field {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.form-field label {
+  color: #263f59;
+  font-size: 14px;
+  font-weight: 550;
+  white-space: nowrap;
+}
+
+.form-field input {
+  width: 100%;
+  min-width: 0;
+  height: 43px;
+  padding: 10px 12px;
+  border: 1px solid #dce5ef;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  color: #19324d;
+}
+
+.form-field input::placeholder {
+  color: #a0acba;
+}
+
+.form-field input:focus {
+  border-color: #1674df;
+  box-shadow: 0 0 0 3px rgb(22 116 223 / 10%);
+}
+
+.form-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.primary-button,
+.secondary-button {
+  flex-shrink: 0;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.primary-button {
+  border: 1px solid #0875e1;
+  background: #0875e1;
+  color: #fff;
+}
+
+.primary-button:hover:not(:disabled) {
+  background: #0563c2;
+}
+
+.secondary-button {
+  border: 1px solid #dce5ef;
+  background: #fff;
+  color: #344b63;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: #f5f8fc;
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* =========================
+   Contacts table
+========================= */
+
+.table-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.table-heading h2 {
+  margin: 0;
+}
+
+.contact-count {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #eaf3ff;
+  color: #075db4;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.table-scroll,
+.user-list-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.contacts-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.contacts-table thead {
+  background: #0875e1;
+  color: #fff;
+}
+
+.contacts-table th,
+.contacts-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e8edf4;
+  white-space: nowrap;
+}
+
+.contacts-table th {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.contacts-table tbody tr:hover {
+  background: #f7faff;
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-button,
+.delete-button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-button {
+  border: 1px solid #c7e0ff;
+  background: #eaf3ff;
+  color: #075db4;
+}
+
+.edit-button:hover:not(:disabled) {
+  background: #d7e9ff;
+}
+
+.delete-button {
+  border: 1px solid #fecaca;
+  background: #fff0f0;
+  color: #c62828;
+}
+
+.delete-button:hover:not(:disabled) {
+  background: #ffe0e0;
+}
+
+.edit-button:disabled,
+.delete-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* =========================
+   Messages
+========================= */
+
+.empty-state,
+.table-message {
+  padding: 28px 16px;
+  color: #718096;
+  text-align: center;
+}
+
+[role="alert"] {
+  color: #c62828;
+}
+
+/* =========================
+   Responsive layout
+========================= */
+
+@media (max-width: 768px) {
+  .app-container {
+    gap: 16px;
+    padding: 14px;
+  }
+
+  .navbar {
+    padding: 14px 16px;
+  }
+
+  .app-title {
+    font-size: 19px;
+  }
+
+  .form-panel,
+  .table-panel {
+    padding: 18px;
+  }
+
+  /* Keep the form on one row; allow horizontal scrolling */
+  .contact-form {
+    min-width: 750px;
+  }
+
+  .contacts-table th,
+  .contacts-table td {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 10px;
+  }
+
+  .navbar {
+    padding: 12px;
+  }
+
+  .app-title {
+    font-size: 17px;
+  }
+
+  .profile-button {
+    gap: 5px;
+    padding: 5px 7px;
+  }
+
+  .form-panel,
+  .table-panel {
+    padding: 14px;
+  }
 }
