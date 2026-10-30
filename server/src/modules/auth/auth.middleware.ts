@@ -18,7 +18,12 @@ const authenticateToken: RequestHandler = (req, res, next) => {
     }
 
     try {
-        jwt.verify(token, jwtSecret);
+        const decoded = jwt.verify(token, jwtSecret);
+        if (typeof decoded === 'string' || typeof decoded.userId !== 'number') {
+            return res.status(401).json({ message: 'Invalid token payload' });
+        }
+
+        req.userId = decoded.userId;
         next();
     } catch {
         return res.status(401).json({ message: 'Invalid or expired token' });

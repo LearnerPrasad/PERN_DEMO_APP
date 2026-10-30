@@ -12,12 +12,12 @@ router.get("/test", (req, res) => {
 router.get('/getUserData',authMiddleware, getUsers);
 
 //Create
-router.post('/postUserData', createUser)
+router.post('/postUserData',authMiddleware, createUser)
 
 //update
-router.put('/putUserData', editUser)
+router.put('/putUserData',authMiddleware, editUser)
 
 //Delete
-router.delete('/deleteUserData/:id', deleteUser)
+router.delete('/deleteUserData/:id',authMiddleware, deleteUser)
 
 export default router;

@@ -66,7 +66,7 @@ function App() {
           localStorage.removeItem('athzToken');
           setUserLogged(false);
           setUserData([]);
-          return;
+          return null;
         }
         if (!response.ok) {
           return response.text().then((message) => {
@@ -78,7 +78,12 @@ function App() {
 
         return response.json();
       })
-      .then((data) => setUserData(data))
+      .then((data) => {
+        if (data !== null) {
+          setUserData(data);
+        }
+        setUserData(data)
+      })
       .catch((error) =>
         setError(
           error instanceof Error
@@ -182,8 +187,8 @@ function App() {
                 </div>
 
                 <span className="contact-count">
-                  {userData.length}{' '}
-                  {userData.length === 1 ? 'contact' : 'contacts'}
+                  {userData?.length}{' '}
+                  {userData?.length === 1 ? 'contact' : 'contacts'}
                 </span>
               </div>
 

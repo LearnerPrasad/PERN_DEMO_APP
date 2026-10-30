@@ -56,10 +56,13 @@ export default function UserForm({
     const dataToSend = editUser
       ? { ...formValues, id: editUser.id }
       : formValues;
-
+    const token = localStorage.getItem('athzToken');
     fetch(url, {
       method,
-      headers: { 'content-type': 'application/json' },
+      headers: { 
+        'content-type': 'application/json',
+        authorization : `Bearer ${token}`
+       },
       body: JSON.stringify(dataToSend),
     })
       .then((response) => {

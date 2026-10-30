@@ -29,9 +29,14 @@ export default function UserList({
 
   const handleDeleteUser = (user: UserTypes) => {
     onError('');
+    const token = localStorage.getItem('athzToken');
 
     fetch(`http://localhost:3000/prasad/deleteUserData/${user.id}`, {
       method: 'DELETE',
+      headers: {
+        'content-type': 'application-json',
+        authorization: `Bearer ${token}`
+      }
     })
       .then((response) => {
         if (!response.ok) {

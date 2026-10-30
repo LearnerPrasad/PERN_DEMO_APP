@@ -108,7 +108,7 @@ describe('edit user validation', () => {
                 name: "Durga",
                 email: "durga@example.com",
                 city: "Hyderabad",
-            },
+            },userId:5,
         } as Request;
 
         const res = {
@@ -134,7 +134,7 @@ describe('edit user validation', () => {
 
         expect(mockedEmailExists).toHaveBeenCalledWith(
             "durga@example.com",
-            1
+            1,5
         );
 
         expect(mockedUpdateUser).toHaveBeenCalledWith({
@@ -142,6 +142,7 @@ describe('edit user validation', () => {
             name: "Durga",
             email: "durga@example.com",
             city: "Hyderabad",
+            userId:5
         });
 
         expect(res.status).toHaveBeenCalledWith(500);
@@ -158,7 +159,7 @@ describe('edit user validation', () => {
                 name: "Durga",
                 email: "durga@example.com",
                 city: "Hyderabad",
-            },
+            },userId:5
         } as Request;
 
         const res = {
@@ -184,7 +185,7 @@ describe('edit user validation', () => {
 
         expect(mockedEmailExists).toHaveBeenCalledWith(
             "durga@example.com",
-            1
+            1,5
         );
 
         expect(mockedUpdateUser).toHaveBeenCalledWith({
@@ -192,6 +193,7 @@ describe('edit user validation', () => {
             name: "Durga",
             email: "durga@example.com",
             city: "Hyderabad",
+            userId:5
         });
 
         expect(res.status).toHaveBeenCalledWith(404);
@@ -208,7 +210,7 @@ describe('edit user validation', () => {
                 name: "Durga",
                 email: "durga@example.com",
                 city: "Hyderabad",
-            },
+            },userId:5
         } as Request;
 
         const res = {
@@ -229,7 +231,7 @@ describe('edit user validation', () => {
 
         expect(mockedEmailExists).toHaveBeenCalledWith(
             "durga@example.com",
-            1
+            1,5
         );
         expect(res.status).toHaveBeenCalledWith(400);
 
@@ -245,7 +247,7 @@ describe('edit user validation', () => {
                 name: "Durga",
                 email: "durga@example.com",
                 city: "Hyderabad",
-            },
+            },userId:5,
         } as Request;
 
         const res = {
@@ -264,6 +266,7 @@ describe('edit user validation', () => {
             name: "Durga",
             email: "durga@example.com",
             city: "Hyderabad",
+            userId:5,
         };
 
         mockedEmailExists.mockResolvedValue(false);
@@ -274,7 +277,7 @@ describe('edit user validation', () => {
 
         expect(mockedEmailExists).toHaveBeenCalledWith(
             "durga@example.com",
-            1
+            1,5
         );
 
         expect(mockedUpdateUser).toHaveBeenCalledWith({
@@ -282,6 +285,7 @@ describe('edit user validation', () => {
             name: "Durga",
             email: "durga@example.com",
             city: "Hyderabad",
+            userId:5
         });
 
         expect(res.json).toHaveBeenCalledWith(updatedUser);
@@ -442,7 +446,7 @@ describe("validate delete user", () => {
         const req = {
             params: {
                 id: "1"
-            },
+            },userId:5,
         } as unknown as Request;
 
         const res = {
@@ -460,7 +464,7 @@ describe("validate delete user", () => {
         const next = jest.fn()
         await deleteUser(req, res, next);
 
-        expect(mockedDeleteExists).toHaveBeenCalledWith(1);
+        expect(mockedDeleteExists).toHaveBeenCalledWith(1,5);
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.json).toHaveBeenCalledWith({ error: "Failed   to delete  user" });
     });
@@ -468,7 +472,7 @@ describe("validate delete user", () => {
         const req = {
             params: {
                 id: "1"
-            },
+            },userId:5
         } as unknown as Request;
 
         const res = {
@@ -486,7 +490,7 @@ describe("validate delete user", () => {
         const next = jest.fn()
         await deleteUser(req, res, next);
 
-        expect(mockedDeleteExists).toHaveBeenCalledWith(1);
+        expect(mockedDeleteExists).toHaveBeenCalledWith(1,5);
         expect(res.status).toHaveBeenCalledWith(404)
         expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
     });
@@ -495,6 +499,7 @@ describe("validate delete user", () => {
             params: {
                 id: '1'
             },
+            userId:5,
         } as unknown as Request;
 
         const res = {
@@ -512,7 +517,7 @@ describe("validate delete user", () => {
         const next = jest.fn()
         await deleteUser(req, res, next);
 
-        expect(mockedDeleteExists).toHaveBeenCalledWith(1);
+        expect(mockedDeleteExists).toHaveBeenCalledWith(1,5);
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.json).toHaveBeenCalledWith({ message: 'User deleted successfully' });
     });
