@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import UserList from './Components/UserList';
 import UserForm from './Components/UserForm';
 import UserManagement from './Components/auth/UserManagement';
-
 type User = {
   id: number;
   name: string;
@@ -17,6 +16,8 @@ function App() {
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [sortOption, setSortOption] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const Authtoken = localStorage.getItem('athzToken');
   const [userLogged, setUserLogged] = useState(!!Authtoken);
@@ -24,6 +25,12 @@ function App() {
   const handleUserCreated = (user: User) => {
     setUserData((prevUserData) => [...prevUserData, user]);
   };
+  const pageLimit = 5;
+  const [totalRecords, setTotalRecords] = useState(0);
+  const totalPages = Math.ceil(totalRecords / pageLimit);
+  const [currentPage, setCurrentPage] = useState(1);
+  const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
+  const endPage = Math.min(startPage + 9, totalPages);
 
   const handleEditUser = (user: User) => {
     setEditUser(user);
@@ -55,7 +62,24 @@ function App() {
 
   useEffect(() => {
     if (!userLogged) return;
-    fetch('http://localhost:3000/prasad/getUserData', {
+    const params = new URLSearchParams();
+
+    if (searchTerm.trim()) {
+      params.set('searchTerm', searchTerm.trim());
+    }
+
+    if (sortOption) {
+      params.set('sortOption', sortOption);
+    }
+    params.set('limit', String(pageLimit));
+
+    params.set('page',String(currentPage));
+
+    const queryString = params.toString();
+
+    const queryUrl = `http://localhost:3000/prasad/getUserData?${queryString}`;
+
+    fetch(queryUrl, {
       method: 'GET',
       headers: {
         authorization: `Bearer ${token}`,
@@ -68,6 +92,7 @@ function App() {
           setUserData([]);
           return null;
         }
+
         if (!response.ok) {
           return response.text().then((message) => {
             throw new Error(
@@ -78,11 +103,11 @@ function App() {
 
         return response.json();
       })
-      .then((data) => {
-        if (data !== null) {
-          setUserData(data);
+      .then((d) => {
+        if (d !== null) {
+          setUserData(d.data);
+          setTotalRecords(d.totalRecords);
         }
-        setUserData(data)
       })
       .catch((error) =>
         setError(
@@ -92,7 +117,8 @@ function App() {
         )
       )
       .finally(() => setIsLoading(false));
-  }, [userLogged]);
+
+  }, [userLogged, searchTerm, sortOption,currentPage]);
 
   const handleLogout = () => {
     localStorage.removeItem('athzToken');
@@ -101,6 +127,10 @@ function App() {
     setEditUser(null);
     setError('');
     setIsProfileOpen(false);
+  };
+
+  const handleFiltering = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -180,10 +210,38 @@ function App() {
             <section className="contact-table-panel">
               <div className="table-heading">
                 <div>
-                  <h2 className="panel-title">Your Contacts</h2>
-                  <p className="panel-description">
-                    Manage your saved contacts in one place.
-                  </p>
+                  <h2 className="panel-title">Contacts</h2>
+
+                  <div className="contacts-controls">
+                    <div className="search-container">
+                      <input
+                        type="text"
+                        placeholder="Search contacts..."
+                        className="search-input"
+                        onChange={handleFiltering}
+                      />
+                      <span className="search-icon">🔎</span>
+                    </div>
+
+                    <select
+                      className="sort-select"
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortOption(e.target.value)}
+                    >
+                      <option value="" disabled>Sort By ↕</option>
+                      <option value="name-asc">Name (A-Z)</option>
+                      <option value="name-desc">Name (Z-A)</option>
+                      <option value="email-asc">Email (A-Z)</option>
+                      <option value="city-asc">City (A-Z)</option>
+                      <option value="newest">Newest First</option>
+                      <option value="oldest">Oldest First</option>
+                    </select>
+                    <button type="button" className="reset-button" onClick={() => {
+                      setSortOption('');
+                      setSearchTerm('')
+                    }}>
+                      Reset
+                    </button>
+                  </div>
                 </div>
 
                 <span className="contact-count">
@@ -197,17 +255,42 @@ function App() {
                   Loading contacts...
                 </p>
               ) : (
-                <div className="table-scroll">
-                  <UserList
-                    onEditUser={handleEditUser}
-                    onDeleteUser={handleDeleteUser}
-                    result={userData}
-                    error={error}
-                    onError={handleError}
-                    isLoading={isLoading}
-                    onLoadingChange={handleLoadingChange}
-                  />
-                </div>
+                <>
+                  <div className="table-scroll">
+                    <UserList
+                      onEditUser={handleEditUser}
+                      onDeleteUser={handleDeleteUser}
+                      result={userData}
+                      error={error}
+                      onError={handleError}
+                      isLoading={isLoading}
+                      onLoadingChange={handleLoadingChange}
+                    />
+                  </div>
+                  <div className="pagination">
+                    <button
+                      className="page-btn"
+                      disabled={startPage === 1}
+                      onClick={() => setCurrentPage(startPage - 10)}
+                    >
+                      Prev
+                    </button>
+
+                    {Array.from({ length: endPage - startPage + 1 }, (_, index) => index + startPage).map((page) => (
+                      <button
+                        key={page}
+                        className={`page-btn ${currentPage === page ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </button>
+                    ))}
+
+                    <button className="page-btn" disabled={endPage === totalPages} onClick={() => setCurrentPage(startPage + 10)}>
+                      Next
+                    </button>
+                  </div>
+                </>
               )}
             </section>
           </main>

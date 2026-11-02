@@ -9,8 +9,15 @@ import {
 import { ValidateUserFields, ValidateUserId } from './contacts.validation';
 
 export const getUsers: RequestHandler = async (req, res) => {
+    const queryParams = {
+        searchTerm: req.query.searchTerm as string | undefined,
+        sortOption: req.query.sortOption as string | undefined,
+        limit:req.query.limit as string,
+        page:req.query.page as string 
+    };
+
     try {
-        const result = await getAllUsers(req.userId);
+        const result = await getAllUsers(req.userId, queryParams);
         res.status(200).json(result);
     } catch (err) {
         res.status(500).send('Internal Server Error');
@@ -27,7 +34,7 @@ export const createUser: RequestHandler = async (req, res) => {
     };
 
     try {
-        const result = await createUserWithEmailCheck({ name, email, city,  userId: req.userId,});
+        const result = await createUserWithEmailCheck({ name, email, city, userId: req.userId, });
 
         if (result.kind === 'email-exists') {
             return res.status(400).json({ error: 'Email already exists' });
@@ -56,7 +63,7 @@ export const editUser: RequestHandler = async (req, res) => {
     }
     try {
         const normalisedEmail = email.trim();
-        if (await userEmailExistsForAnotherUser(normalisedEmail, id,req.userId)) {
+        if (await userEmailExistsForAnotherUser(normalisedEmail, id, req.userId)) {
             return res.status(400).json({ error: 'Email already exists' });
         }
 
@@ -65,7 +72,7 @@ export const editUser: RequestHandler = async (req, res) => {
             name,
             email: normalisedEmail,
             city,
-            userId:req.userId
+            userId: req.userId
         });
 
         if (!updatedUser) {
@@ -85,7 +92,7 @@ export const deleteUser: RequestHandler = async (req, res) => {
         })
     }
     try {
-        const deleted = await deleteUserById(id,req.userId);
+        const deleted = await deleteUserById(id, req.userId);
         if (!deleted) {
             return res.status(404).json({ error: 'User not found' })
         }
